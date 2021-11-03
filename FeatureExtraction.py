@@ -73,18 +73,19 @@ def FeatureExtraction(enhanced_normal):
     # Get two channels using the parameters defined in paper
     channel1 = block(3, 1.5, f)
     channel2 = block(4, 1.5, f)
-    
-    feature_vec = []
-    
 
-    # enhanced_normal has length 64 and enhance_normal has length 512
-    # Define a 48 by 512 region as ROI
-    ROI = enhanced_normal[:48,:]
+    feature_vector=[]
 
-    filtered1 = scipy.signal.convolve2d(ROI,channel1,mode='same')
-    filtered2 = scipy.signal.convolve2d(ROI,channel2,mode='same')
-    
-    vector = get_vector(filtered1,filtered2)
-    feature_vec.append(vector)
-    # len(feature_vec) == 1536
-    return np.array(feature_vec).flatten()
+    for i in range(len(enhanced_normal)):
+        enhanced = enhanced_normal[i]
+        # enhanced_normal has length 64 and enhance_normal has length 512
+        # Define a 48 by 512 region as ROI
+        ROI = enhanced[:48,:]
+
+        filtered1 = scipy.signal.convolve2d(ROI,channel1,mode='same')
+        filtered2 = scipy.signal.convolve2d(ROI,channel2,mode='same')
+
+        vector = get_vector(filtered1,filtered2)
+        # len(feature_vec) == 1536
+        feature_vector.append(vector)
+    return feature_vector
