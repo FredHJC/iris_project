@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import metrics
+import copy
 
 def getRotation(image, degrees):
     # getRotation(image, degree):
@@ -51,8 +52,8 @@ def IrisNormalization(boundary,centers, rotation_flag):
                 continue
 
             # reshape image into size 64*512 size
-            polar_resize = cv2.resize(polar,(512,64))
-            return polar_resize
+        polar_resize = cv2.resize(polar,(512,64))
+        return polar_resize
 
 
     # x,y location for pupil and pupil radius
@@ -74,7 +75,7 @@ def IrisNormalization(boundary,centers, rotation_flag):
 
     tmp = list(zip(boundary,centers))
 
-    normalized = list(map(lambda x: apply_transform(iris_width, theta_range, x[1][0], x[1][1], x[1][2],polar, x[0]), tmp))
+    normalized = list(map(lambda x: apply_transform(iris_width, theta_range, x[1][0], x[1][1], x[1][2], copy.deepcopy(polar), x[0]), tmp))
 
     if not rotation_flag:
         return normalized
