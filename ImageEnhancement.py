@@ -17,8 +17,8 @@ def enhance(image):
     enhanced_normal = image.copy()
 
     # range for row and column
-    nrow = int(normalized.shape[0]/32) # 2
-    ncol = int(normalized.shape[1]/32) # 16
+    nrow = int(enhanced_normal.shape[0]/32) # 2
+    ncol = int(enhanced_normal.shape[1]/32) # 16
 
     # The following loop will first define each 32*32 region in normalized image
     # and then perform histogram equalization in each divided region
