@@ -36,6 +36,6 @@ def enhance(image):
 def ImageEnhancement(normalized):
     enhanced=[]
     for res in normalized:
-        im=enhance(res)
+        im=enhance(np.uint8(res))
         enhanced.append(im)
     return enhanced
