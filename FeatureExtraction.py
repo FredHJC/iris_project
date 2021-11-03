@@ -31,7 +31,6 @@ def block(dx, dy, f):
             feature[i,j] = Gabor((-4+j),(-4+i),dx,dy,f)
     return feature
 
-
 # The function inputs the two filtered image, calculates mean and std for each block of each channel, 
 # and returns the desired vector V with all means and stds appended to it.
 def get_vector(vector1,vector2):
