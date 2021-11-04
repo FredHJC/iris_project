@@ -57,8 +57,8 @@ def PerformanceEvaluation(df_train, df_test, df_test_origin, crrs, df_result):
     plt.xlabel("Dimensionality of the Feature Vector")
     plt.ylabel('Correct Recognition Rate')
     plt.title('Dimensionality vs. CRR')
-    plt.show()
     plt.savefig('crr.png')
+    plt.show()
 
     crr_rates = list(get_crr(class1,class2,class_cos,df_result['idx']))
     ori_crr_rates = list(get_crr(class1_origin,class2_origin,class_cos_origin,df_test_origin['idx']))
@@ -79,8 +79,8 @@ def PerformanceEvaluation(df_train, df_test, df_test_origin, crrs, df_result):
     plt.xlabel("False Match")
     plt.ylabel('False Non-match')
     plt.plot(fmr_res, fnmr_res)
-    plt.show()
     plt.savefig('roc.png')
+    plt.show()
 
     print('\n\n')
     table = pd.DataFrame(list(zip(np.linspace(0,1,11), fmr_res, fnmr_res)), columns=['threshold', 'False Match', 'False Non-match'])
