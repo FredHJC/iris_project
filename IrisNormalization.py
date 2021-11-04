@@ -2,18 +2,10 @@
 # coding: utf-8
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from sklearn import metrics
 import copy
 
 def getRotation(image, degrees):
-    # getRotation(image, degree):
-    """This function takes normalized image and rotate the rectangle image to specified degree
-    :image: input image
-    :degree: rotate the rectangle image to specified degree
-    :return: rotated image
-    """
+    """return rotated image given degrees"""
     res = []
     for degree in degrees:
         pixels = abs(int(512*degree/360))
@@ -37,8 +29,6 @@ def IrisNormalization(boundary,centers, rotation_flag):
                 x = int(x_p + (outer_radius) * np.cos(theta))
                 y = int(y_p + (outer_radius) * np.sin(theta))
 
-
-                # theta = 2*pi*X => X = theta/(2*pi)
                 # Here theta is only one slice angle, need to multiply by 360
                 X  = int((360 * theta)/(2 * np.pi))
 
@@ -55,14 +45,6 @@ def IrisNormalization(boundary,centers, rotation_flag):
         polar_resize = cv2.resize(polar,(512,64))
         return polar_resize
 
-
-    # x,y location for pupil and pupil radius
-
-    # x_p = centers[center][0]
-    # y_p = centers[center][1]
-    # pupil_radius = int(centers[center][2])
-
-    # iris width, the distance between inner boundary and outer boundary
     iris_width = 55
 
     # define equally spaced interval to iterate over

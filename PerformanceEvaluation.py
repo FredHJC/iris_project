@@ -9,11 +9,11 @@ def get_crr(class_lab1,class_lab2,class_lab3,target_lab):
     crr_1 = sum(target_lab==class_lab1)/len(target_lab) * 100
     crr_2 = sum(target_lab==class_lab2)/len(target_lab) * 100
     crr_3 = sum(target_lab==class_lab3)/len(target_lab) * 100
-    return crr_1,crr_2,crr_3
+    return round(crr_1,2), round(crr_2,2), round(crr_3,2)
 
 def get_table(crr_rates, ori_crr_rates):
     print('\n\n')
-    dict={'Similarity Measure':['L1 distance measure','L2 distance measure','Cosine similarity measure'],
+    dict={'Similarity Measure':['L1','L2','Cosine similarity'],
           'Original Feature':[ori_crr_rates[0],ori_crr_rates[1],ori_crr_rates[2]],
           'Reduced Feature':[crr_rates[0],crr_rates[1],crr_rates[2]]}
     table = pd.DataFrame(dict)
@@ -41,23 +41,13 @@ def ROC(threshold, df):
 
     return fmr, fnmr
 
-def PerformanceEvaluation(df_train, df_test, df_test_origin, df_dic):
-    df_result = df_dic[100]
+def PerformanceEvaluation(df_train, df_test, df_test_origin, crrs, df_result):
     class1, class2, cos_sim, class_cos = df_result['class_1'].values, df_result['class_2'].values, df_result['cos_sim'].values, df_result['class_cos'].values
     class1_origin, class2_origin, cos_sim_origin, class_cos_origin = df_test_origin['class_1'].values, df_test_origin['class_2'].values, df_test_origin['cos_sim'].values, df_test_origin['class_cos'].values
 
-    L1_crr = []
-    L2_crr = []
-    cos_crr = []
+    L1_crr, L2_crr, cos_crr = crrs[0], crrs[1], crrs[2]
 
     n_component = range(40,101,20)
-
-    for n in n_component:
-        df_tmp = df_dic[n]
-        crr_1,crr_2,crr_3 = get_crr(df_tmp['class_1'],df_tmp['class_2'],df_tmp['class_cos'],df_tmp['idx'])
-        L1_crr.append(crr_1)
-        L2_crr.append(crr_2)
-        cos_crr.append(crr_3)
 
     plt.plot(n_component,L1_crr,label='L1')
     plt.plot(n_component,L2_crr,label='L2')
@@ -68,27 +58,38 @@ def PerformanceEvaluation(df_train, df_test, df_test_origin, df_dic):
     plt.ylabel('Correct Recognition Rate')
     plt.title('Dimensionality vs. CRR')
     plt.show()
+    plt.savefig('crr.png')
 
     crr_rates = list(get_crr(class1,class2,class_cos,df_result['idx']))
     ori_crr_rates = list(get_crr(class1_origin,class2_origin,class_cos_origin,df_test_origin['idx']))
-    print(get_table(crr_rates, ori_crr_rates))
+    crr_table = get_table(crr_rates, ori_crr_rates)
+    print(crr_table)
+    crr_table.to_csv('CRR.csv', encoding='utf-8', index=False)
 
     print('\n\n')
-    print ("ROC curve")
+    print ("ROC Curve")
 
     fmr_res = []
     fnmr_res = []
     for threshold in np.linspace(0,1,11):
         fmr, fnmr = ROC(threshold, df_result)
-        fmr_res.append(fmr)
-        fnmr_res.append(fnmr)
+        fmr_res.append(round(fmr,4))
+        fnmr_res.append(round(fnmr,4))
 
     plt.xlabel("False Match")
     plt.ylabel('False Non-match')
     plt.plot(fmr_res, fnmr_res)
     plt.show()
+    plt.savefig('roc.png')
 
     print('\n\n')
-    table = pd.DataFrame(list(zip(np.linspace(0,1,10), fmr_res, fnmr_res)), columns=['threshold', 'False Match', 'False Non-match'])
+    table = pd.DataFrame(list(zip(np.linspace(0,1,11), fmr_res, fnmr_res)), columns=['threshold', 'False Match', 'False Non-match'])
     print ("False Match and False Nonmatch Rates with Different Threshold Values")
     print(table)
+    table.to_csv('Match_Nonmatch.csv', encoding='utf-8', index=False)
+
+    print('\n\n')
+    print("=========Output Saved==========")
+
+
+

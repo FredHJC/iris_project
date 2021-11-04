@@ -8,9 +8,9 @@ images: A list of train/test images from the CASIA image database.
 
 ### Return
 boundary: A list of all images with the outer boundary drawn.
-center: A list of all pupil centers of each image. Each pupil center is an element of length 3 of the list center. Each element of the list contains x-coordinate, y-coordinate, and the radius of the pupil center. 
+center: A list of all pupil centers of each image. Each pupil center is an element of length 3 of the list center. Each element of the list contains x-coordinate, y-coordinate, and the radius of the pupil center.
 
-### Logic 
+### Logic
 1. Apply bilateral filter to blur each image with the purpose to reduce noise.
 2. Project each image both horizontally and vertically and find the local minimum, which is notated by (X_p,Y_p) in the function. This is the approximated pupil center because the local minimum is the darkest region.
 3. Create a 120 x 120 region around (X_p,Y_p) as mentioned in Ma's paper; and then recalculate the pupil center using same procedures mentioned in step #2.
@@ -30,11 +30,11 @@ center: output from IrisLocalization, a list of all pupil centers of each image.
 ### Return
 normalized: A list of 64x512 normalized images
 
-### Logic 
+### Logic
 1. Initialized an empty list to store the normalized images;
-2. Converted the polar coordinates in the iris region to cartesian coordinates based on the direction of theta. 
-3. Appended Iris pixel from original image to the new-created normalized list. 
-4. Kept original image coordinates within the fixed boundary  i.e(280,320), discarded the rest. 
+2. Converted the polar coordinates in the iris region to cartesian coordinates based on the direction of theta.
+3. Appended Iris pixel from original image to the new-created normalized list.
+4. Kept original image coordinates within the fixed boundary  i.e(280,320), discarded the rest.
 5. Resized input image to a rectangular 64x512 sized image.
 
 
@@ -66,7 +66,7 @@ degree: specified rotation degree in a list
 Image after rotation
 
 ### Logic
-1. Obtained image pixels based on rotation degree; 
+1. Obtained image pixels based on rotation degree;
 2. Considered three cases depending on whether rotation angle is negative, 0 or positive;
 3. Appended corresponding rotation pixels to result list from the enhanced normalized image.
 
@@ -76,12 +76,12 @@ Image after rotation
 enhanced: the function inputs all the enhanced images from IrisEnhancement.
 
 ### Return
-feature_vec: A numpy array with each element containing 1536 feature components aas defined in Li Ma's paper. 
+feature_vec: A numpy array with each element containing 1536 feature components aas defined in Li Ma's paper.
 
 ### Functions
 M(x,y,f): inputs x: x-coordinate, y: y-coordinate, and f: frequency and calculates the M1 modulating function mentioned in paper.
 
-Gabor(x,y,dx,dy,f): inputs x,y, dx: space constant x, dy: space constant y, and f. It performs the gabor filterd defined in paper. 
+Gabor(x,y,dx,dy,f): inputs x,y, dx: space constant x, dy: space constant y, and f. It performs the gabor filterd defined in paper.
 
 block(dx,dy,f): inputs dx,dy, and f. Implements gabor filtering on an 8 x 8 region with predetermined parameters dx,dy, and f.
 
@@ -92,13 +92,13 @@ get_vector(vector1,vector2): inputs two filtered images and computes the mean an
 2. Obtain the ROI by slicing the normalized image to 48 x 512, as defined in paper.
 3. Implement the convolution method on two channels and obtain two filtered images.
 4. Run get_vector() function using the two filtered images from step #3
-5. Obtain the desired feature vector. 
+5. Obtain the desired feature vector.
 
-## IrisMatching 
+## IrisMatching
 ### Input
 It inputs trained feature vector and test feature vector
 ### Return
-Returns a dictionary of dataframes in which the key represents the feature number selected in LDA, the value is the entire test dataframe containing reduced features and each class labels from different distance measures.
+Returns dataframes and crr arrays where are crr results from different distance measures and number of features.
 
 ### Functions
 chunks(lst,n): Yield successive n-sized chunks from lst.
@@ -108,13 +108,24 @@ Feature_num(df_train, df_test, n_component): input the train and test dataframe,
 
 ### Logic
 1. Create the trained dataframe where each image is rotated at 7 angles as mentioned in Li Ma’s paper. In the dataframe, idx indicates the actual class number; img_idx indicates which train image it belongs in the class; degree indicates what angle the image is rotated.
-2. Similarly, create the test dataframe where for each class there are four testing images and no rotations are performed. 
-3. Choose a series of feature numbers we want to test on and call the Feature_num() function. 
+2. Similarly, create the test dataframe where for each class there are four testing images and no rotations are performed.
+3. Choose a series of feature numbers we want to test on and call the Feature_num() function.
 
-## Evaluation 
+## PerformanceEvaluation
+PerformanceEvaluation(df_train, df_test, df_test_origin, crrs, df_result) will input both train and test data frames, original feature dataframe and dictionary that stores feature numbers in LDA. The function will output correct recognition rate table and corresponding ROC curve. Performance is evaluated by three different distance measures (L1, L2 and cosine similarity) and dimensionality reduction in LDA.
+
 ### SubFunctions
-1.get_crr(class_lab1,class_lab2,class_lab3,target_lab): input classification labels returned from IrisMatching, and returned crr_1,crr_2,crr_3, which are Correct Recognition Rate for class L1, L2 and cosine similarity.
-2.get_table(crr_rates): input crr_rates for 3 classes obtained from function get_crr() and returned a table form of correct recognition rate for class L1, L2 and cosine similarity .
-3.test_match(threshold, x): input predetermined threshold values and bound variable x for lambda function and returned 1 (accepted) if it was within the threshold, otherwise returned 0 (rejected).
-4.ROC(threshold, df): input predetermined threshold and test data frame, and output false positive rate and true positive rate used to draw ROC graph.
+1. get_crr(class_lab1,class_lab2,class_lab3,target_lab): input classification labels returned from IrisMatching, and returned crr_1,crr_2,crr_3, which are Correct Recognition Rate for class L1, L2 and cosine similarity.
+2. get_table(crr_rates): input crr_rates for 3 classes obtained from function get_crr() and returned a table form of correct recognition rate for class L1, L2 and cosine similarity .
+3. test_match(threshold, x): input predetermined threshold values and bound variable x for lambda function and returned 1 (accepted) if it was within the threshold, otherwise returned 0 (rejected).
+4. ROC(threshold, df): input predetermined threshold and test data frame, and output false positive rate and true positive rate used to draw ROC graph.
+
+## Peer Evaluation
+1. IrisLocalization: Jiashu Xia
+2. IrisNormalization: Siqi Chen, Jiachen Huang
+3. Iris Enhancement: Siqi Chen
+4. FeatureExtraction: Jiashu Xia
+5. IrisMatching: Jiachen Huang, Jiashu Xia
+6. PerformanceEvaluation: Jiachen Huang
+7.  IrisRecognition: Jiachen Huang
 

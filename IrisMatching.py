@@ -47,6 +47,12 @@ def feature_num(df_train, df_test, n_component):
 
     return df_test
 
+def get_crr(class_lab1,class_lab2,class_lab3,target_lab):
+    crr_1 = sum(target_lab==class_lab1)/len(target_lab) * 100
+    crr_2 = sum(target_lab==class_lab2)/len(target_lab) * 100
+    crr_3 = sum(target_lab==class_lab3)/len(target_lab) * 100
+    return round(crr_1,2), round(crr_2,2), round(crr_3,2)
+
 def IrisMatching(feature_vector_train,feature_vector_test):
     # slice the train vectors
     sliced_res_train = list(chunks(feature_vector_train,21))
@@ -84,10 +90,19 @@ def IrisMatching(feature_vector_train,feature_vector_test):
 
     n_component = range(40,101,20)
     df_dic = {}
+    L1_crr = []
+    L2_crr = []
+    cos_crr = []
 
     for i,n in enumerate(n_component):
         df_tmp = feature_num(df_train.copy(),df_test.copy(),n)
         df_dic[n] = df_tmp
+        crr_1,crr_2,crr_3 = get_crr(df_tmp['class_1'],df_tmp['class_2'],df_tmp['class_cos'],df_tmp['idx'])
+        L1_crr.append(crr_1)
+        L2_crr.append(crr_2)
+        cos_crr.append(crr_3)
     df_test_origin = df_test.apply(lambda x: get_class(x, df_train.copy(), 'feature'), axis=1)
 
-    return df_train, df_test, df_test_origin, df_dic
+    crrs = [L1_crr, L2_crr, cos_crr]
+
+    return df_train, df_test, df_test_origin, crrs, df_dic[100]
