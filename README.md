@@ -130,11 +130,16 @@ PerformanceEvaluation(df_train, df_test, df_test_origin, crrs, df_result) will i
 4. ROC(threshold, df): input predetermined threshold and test data frame, and output false positive rate and true positive rate used to draw ROC graph.
 
 ## Peer Evaluation
-1. IrisLocalization: Jiashu Xia
-2. IrisNormalization: Siqi Chen, Jiachen Huang
-3. Iris Enhancement: Siqi Chen
-4. FeatureExtraction: Jiashu Xia
-5. IrisMatching: Jiachen Huang, Jiashu Xia
-6. PerformanceEvaluation: Jiachen Huang
-7.  IrisRecognition: Jiachen Huang
+
+| Part      | Team member     | 
+| ---------- | :-----------:  | 
+| IrisLocalization     | Jiashu Xia  |
+| IrisNormalization     | Siqi Chen, Jiachen Huang |
+| Iris Enhancement     | Siqi Chen   |
+| FeatureExtraction     | Jiashu Xia     |
+| IrisMatching     | Jiachen Huang, Jiashu Xia    |
+| PerformanceEvaluation     | Jiachen Huang    |
+| IrisRecognition     | Jiachen Huang     |
+
+
 
