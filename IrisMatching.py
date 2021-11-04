@@ -20,9 +20,13 @@ def compute_dis(test_feature, target_feature, norm):
 def get_class(p, df_train, label):
     """Compute the matched class, as well as the similarity score"""
     train_templates = df_train[label].values
+
+    # apply and compute distance for each template given one testing row
     dis_1 = list(map(lambda x: compute_dis(p[label], x, 1),train_templates))
     dis_2 = list(map(lambda x: compute_dis(p[label], x, 2),train_templates))
     dis_cos = list(map(lambda x: compute_dis(p[label], x, 3),train_templates))
+
+    # get the min index
     min_idx_1 = np.argmin(dis_1)
     min_idx_2 = np.argmin(dis_2)
     min_idx_cos = np.argmin(dis_cos)
@@ -57,7 +61,7 @@ def IrisMatching(feature_vector_train,feature_vector_test):
     # slice the train vectors
     sliced_res_train = list(chunks(feature_vector_train,21))
     list_of_dataframes_train = []
-
+    # transform arrays to dataframe
     for i, eyes in enumerate(sliced_res_train):
         # i from 0 to 107
         sliced_eyes = list(chunks(eyes,7))
@@ -94,6 +98,7 @@ def IrisMatching(feature_vector_train,feature_vector_test):
     L2_crr = []
     cos_crr = []
 
+    # loop through diff components, compute crr with each number of features
     for i,n in enumerate(n_component):
         df_tmp = feature_num(df_train.copy(),df_test.copy(),n)
         df_dic[n] = df_tmp
@@ -103,6 +108,7 @@ def IrisMatching(feature_vector_train,feature_vector_test):
         cos_crr.append(crr_3)
     df_test_origin = df_test.apply(lambda x: get_class(x, df_train.copy(), 'feature'), axis=1)
 
+    # store computed crrs
     crrs = [L1_crr, L2_crr, cos_crr]
 
     return df_train, df_test, df_test_origin, crrs, df_dic[100]

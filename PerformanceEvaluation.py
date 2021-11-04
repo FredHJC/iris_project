@@ -78,6 +78,7 @@ def PerformanceEvaluation(df_train, df_test, df_test_origin, crrs, df_result):
 
     plt.xlabel("False Match")
     plt.ylabel('False Non-match')
+    plt.title('Match Non-match ROC')
     plt.plot(fmr_res, fnmr_res)
     plt.savefig('roc.png')
     plt.show()
