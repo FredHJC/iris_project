@@ -1,4 +1,13 @@
 # IrisRecognition
+This is the main function
+
+### Workflow:
+1. Read in the images from the relative path and split them into a training group and a testing group.
+2. Looped through every image in the groups. First localize the iris by IrisLocalization function, then normalize and enhance the image by IrisNormalization and IrisEnhancement functions respectively. For each enhanced image, extract the features and store the features and class lables of each image in the list.
+3. Performed iris matching in different dimensions under three distances metrics (L1, L2 and cosine similarity)
+4. Produced recognition results table using different similarity measures for reduced feature set.
+5. Calculated false match rate and false non-match rate based on different threshold
+6. Plotted Table 4, False Match and False Non-match Rates with different Threshold Values, and the ROC curve.
 
 ## IrisLocalization
 The function IrisLocalization(images) preprocesses all the input images and apply Hough transform to detect the pupil circle(inner boundary) and the iris circle(outer boundary) of each image.
